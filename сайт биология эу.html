@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Электронный учебник по биологии</title>
+
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+:root{
+    --primary:#2e8b57;
+    --accent:#4caf50;
+    --bg:#f1f7f3;
+    --card:#ffffff;
+    --text:#222;
+}
+
+[data-theme="dark"]{
+    --primary:#66bb6a;
+    --accent:#81c784;
+    --bg:#111814;
+    --card:#1d2721;
+    --text:#f0f0f0;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Roboto',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    transition:0.3s;
+}
+
+.header{
+    display:flex;
+    align-items:center;
+    padding:20px 35px;
+    background:var(--card);
+    border-bottom:5px solid var(--primary);
+    position:sticky;
+    top:0;
+    z-index:1000;
+    box-shadow:0 5px 20px rgba(0,0,0,0.15);
+}
+
+.logo{
+    width:90px;
+    height:90px;
+    border-radius:20px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:42px;
+    background:linear-gradient(135deg,var(--primary),var(--accent));
+    color:white;
+    text-decoration:none;
+}
+
+.nav{
+    display:flex;
+    gap:10px;
+    margin-left:30px;
+    flex-wrap:wrap;
+}
+
+.nav button{
+    border:none;
+    background:var(--primary);
+    color:white;
+    padding:12px 20px;
+    border-radius:12px;
+    cursor:pointer;
+    transition:0.3s;
+    font-size:15px;
+}
+
+.nav button:hover,
+.nav button.active{
+    background:#1f6d45;
+    transform:translateY(-3px);
+}
+
+.theme-toggle{
+    margin-left:auto;
+    border:none;
+    background:var(--primary);
+    color:white;
+    padding:10px 18px;
+    border-radius:30px;
+    cursor:pointer;
+}
+
+.container{
+    max-width:1300px;
+    margin:40px auto;
+    padding:0 20px;
+}
+
+.main-content{
+    background:var(--card);
+    border-radius:20px;
+    padding:40px;
+    box-shadow:0 10px 40px rgba(0,0,0,0.12);
+}
+
+.section{
+    display:none;
+}
+
+.section.active{
+    display:block;
+    animation:fade 0.4s;
+}
+
+@keyframes fade{
+    from{opacity:0;}
+    to{opacity:1;}
+}
+
+.logo-big{
+    font-size:170px;
+    text-align:center;
+}
+
+h1{
+    text-align:center;
+    color:var(--primary);
+    margin-bottom:15px;
+    font-size:2.5rem;
+}
+
+h2{
+    margin:20px 0;
+    color:var(--primary);
+}
+
+.welcome{
+    text-align:center;
+    font-size:1.2rem;
+    line-height:1.8;
+    max-width:900px;
+    margin:0 auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:30px;
+}
+
+th,td{
+    border:1px solid #ddd;
+    padding:16px;
+}
+
+th{
+    background:var(--primary);
+    color:white;
+}
+
+.btn{
+    border:none;
+    padding:10px 18px;
+    border-radius:10px;
+    cursor:pointer;
+    color:white;
+    transition:0.3s;
+}
+
+.btn-green{
+    background:#28a745;
+}
+
+.btn-green:hover{
+    background:#218838;
+}
+
+.btn-blue{
+    background:#007bff;
+}
+
+.btn-blue:hover{
+    background:#0056b3;
+}
+
+.video-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(350px,1fr));
+    gap:25px;
+    margin-top:30px;
+}
+
+.video-item iframe{
+    width:100%;
+    height:230px;
+    border-radius:14px;
+}
+
+.video-item p{
+    text-align:center;
+    margin-top:10px;
+}
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.85);
+    z-index:3000;
+    justify-content:center;
+    align-items:center;
+}
+
+.modal-content{
+    width:92%;
+    max-width:1000px;
+    background:var(--card);
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.modal-header{
+    background:var(--primary);
+    color:white;
+    padding:18px 25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.close{
+    font-size:35px;
+    cursor:pointer;
+}
+
+.lesson-body{
+    padding:30px;
+    line-height:1.8;
+    max-height:80vh;
+    overflow:auto;
+}
+
+.quiz-container{
+    padding:30px;
+}
+
+.quiz-question{
+    font-size:1.3rem;
+    margin-bottom:20px;
+}
+
+.quiz-options{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+.quiz-option{
+    padding:15px;
+    border:2px solid #ddd;
+    border-radius:12px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.quiz-option:hover{
+    border-color:var(--primary);
+    background:#e8f5e9;
+}
+
+.quiz-option.selected{
+    background:#c8e6c9;
+    border-color:var(--primary);
+}
+
+.result{
+    text-align:center;
+    padding:30px;
+}
+
+@media(max-width:768px){
+
+.header{
+    flex-direction:column;
+    gap:20px;
+}
+
+.nav{
+    margin-left:0;
+    justify-content:center;
+}
+
+.logo-big{
+    font-size:120px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+
+<a href="#" class="logo"
+onclick="showSection('home')">
+🧬
+</a>
+
+<div class="nav">
+
+<button class="nav-btn active"
+onclick="showSection('home')">
+🏠 Главная
+</button>
+
+<button class="nav-btn"
+onclick="showSection('lectures')">
+📚 Лекции
+</button>
+
+<button class="nav-btn"
+onclick="showSection('practice')">
+🔬 Практика
+</button>
+
+<button class="nav-btn"
+onclick="showSection('tests')">
+✅ Тесты
+</button>
+
+<button class="nav-btn"
+onclick="showSection('video')">
+🎥 Видео
+</button>
+
+<button class="nav-btn"
+onclick="showSection('author')">
+👤 Автор
+</button>
+
+</div>
+
+<button class="theme-toggle"
+onclick="toggleTheme()">
+🌙 Тема
+</button>
+
+</div>
+
+<div class="container">
+<div class="main-content">
+
+<!-- HOME -->
+
+<div id="home" class="section active">
+
+<div class="logo-big">🧬</div>
+
+<h1>Электронный учебник по биологии</h1>
+
+<p class="welcome">
+
+Добро пожаловать в современный интерактивный учебник по биологии.<br><br>
+
+Здесь вы сможете изучить:
+строение клетки,
+генетику,
+анатомию человека,
+экологию,
+микроорганизмы
+и основы современной биологии.
+
+</p>
+
+</div>
+
+<!-- LECTURES -->
+
+<div id="lectures" class="section">
+
+<h1>Лекции</h1>
+
+<table>
+
+<tr>
+<th>Тема</th>
+<th>Действие</th>
+</tr>
+
+<tr>
+<td>Введение в биологию</td>
+<td>
+<button class="btn btn-green"
+onclick="openLesson('bio1')">
+Открыть
+</button>
+</td>
+</tr>
+
+<tr>
+<td>Строение клетки</td>
+<td>
+<button class="btn btn-green"
+onclick="openLesson('bio2')">
+Открыть
+</button>
+</td>
+</tr>
+
+<tr>
+<td>Генетика</td>
+<td>
+<button class="btn btn-green"
+onclick="openLesson('bio3')">
+Открыть
+</button>
+</td>
+</tr>
+
+<tr>
+<td>Экология</td>
+<td>
+<button class="btn btn-green"
+onclick="openLesson('bio4')">
+Открыть
+</button>
+</td>
+</tr>
+
+</table>
+
+</div>
+
+<!-- PRACTICE -->
+
+<div id="practice" class="section">
+
+<h1>Практические работы</h1>
+
+<table>
+
+<tr>
+<th>Работа</th>
+<th>Действие</th>
+</tr>
+
+<tr>
+<td>Изучение клетки под микроскопом</td>
+<td>
+<button class="btn btn-blue"
+onclick="openLesson('practice1')">
+Открыть
+</button>
+</td>
+</tr>
+
+<tr>
+<td>Исследование экосистемы</td>
+<td>
+<button class="btn btn-blue"
+onclick="openLesson('practice2')">
+Открыть
+</button>
+</td>
+</tr>
+
+</table>
+
+</div>
+
+<!-- TESTS -->
+
+<div id="tests" class="section">
+
+<h1>Тестирование</h1>
+
+<table>
+
+<tr>
+<th>Название теста</th>
+<th>Действие</th>
+</tr>
+
+<tr>
+<td>Тест 1 — Основы биологии</td>
+<td>
+<button class="btn btn-blue"
+onclick="startQuiz(1)">
+Пройти тест
+</button>
+</td>
+</tr>
+
+<tr>
+<td>Тест 2 — Строение клетки</td>
+<td>
+<button class="btn btn-blue"
+onclick="startQuiz(2)">
+Пройти тест
+</button>
+</td>
+</tr>
+
+<tr>
+<td>Тест 3 — Генетика</td>
+<td>
+<button class="btn btn-blue"
+onclick="startQuiz(3)">
+Пройти тест
+</button>
+</td>
+</tr>
+
+<tr>
+<td>Тест 4 — Экология</td>
+<td>
+<button class="btn btn-blue"
+onclick="startQuiz(4)">
+Пройти тест
+</button>
+</td>
+</tr>
+
+<tr>
+<td>Тест 5 — Анатомия человека</td>
+<td>
+<button class="btn btn-blue"
+onclick="startQuiz(5)">
+Пройти тест
+</button>
+</td>
+</tr>
+
+</table>
+
+</div>
+
+<!-- VIDEO -->
+
+<div id="video" class="section">
+
+<h1>Видео уроки по биологии</h1>
+
+<div class="video-grid">
+
+<div class="video-item">
+
+<iframe
+src="https://www.youtube.com/embed/Zj6rTtkhvAA"
+allowfullscreen>
+</iframe>
+
+<p>
+Биология — Клетка | Основы
+</p>
+
+</div>
+
+<div class="video-item">
+
+<iframe
+src="https://www.youtube.com/embed/g_6AK0TV9l8"
+allowfullscreen>
+</iframe>
+
+<p>
+Клеточная теория
+</p>
+
+</div>
+
+<div class="video-item">
+
+<iframe
+src="https://www.youtube.com/embed/ZV_kq1yooD4"
+allowfullscreen>
+</iframe>
+
+<p>
+Прокариоты и эукариоты
+</p>
+
+</div>
+
+<div class="video-item">
+
+<iframe
+src="https://www.youtube.com/embed/Whf8S42Bbvw"
+allowfullscreen>
+</iframe>
+
+<p>
+Строение клеток растений и животных
+</p>
+
+</div>
+
+<div class="video-item">
+
+<iframe
+src="https://www.youtube.com/embed/PinVWvQ_Y08"
+allowfullscreen>
+</iframe>
+
+<p>
+Клетка: строение и жизнедеятельность
+</p>
+
+</div>
+
+<div class="video-item">
+
+<iframe
+src="https://www.youtube.com/embed/ZSMqaN1NKXM"
+allowfullscreen>
+</iframe>
+
+<p>
+Биология человека
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- AUTHOR -->
+
+<div id="author" class="section">
+
+<div style="
+background:linear-gradient(135deg,var(--primary),var(--accent));
+padding:60px;
+border-radius:20px;
+color:white;
+max-width:700px;
+margin:40px auto;
+text-align:center;
+">
+
+<h2 style="color:white;">
+Автор курса
+</h2>
+
+<p style="font-size:22px;margin-top:20px;">
+Преподаватель биологии
+</p>
+
+<p><strong>ФИО:</strong>Кубан кызы Даминур</p>
+<p><strong>Email:</strong> Kuban_kyzy_as@iuca.kg</p>
+<p><strong>Телефон:</strong> +996 707993330</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+<!-- LESSON MODAL -->
+
+<div id="lessonModal" class="modal">
+
+<div class="modal-content">
+
+<div class="modal-header">
+
+<h3>Учебный материал</h3>
+
+<span class="close"
+onclick="closeLesson()">
+×
+</span>
+
+</div>
+
+<div class="lesson-body"
+id="lessonContent">
+</div>
+
+</div>
+
+</div>
+
+<!-- QUIZ MODAL -->
+
+<div id="quizModal" class="modal">
+
+<div class="modal-content">
+
+<div class="modal-header">
+
+<h3 id="quizTitle">
+Тест
+</h3>
+
+<span class="close"
+onclick="closeQuiz()">
+×
+</span>
+
+</div>
+
+<div class="quiz-container"
+id="quizContent">
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+/* ================= THEME ================= */
+
+let currentTheme =
+localStorage.getItem('theme') || 'light';
+
+document.documentElement
+.setAttribute('data-theme',currentTheme);
+
+function toggleTheme(){
+
+currentTheme =
+currentTheme === 'light'
+? 'dark'
+: 'light';
+
+document.documentElement
+.setAttribute('data-theme',currentTheme);
+
+localStorage
+.setItem('theme',currentTheme);
+
+}
+
+
+
+function showSection(id){
+
+document.querySelectorAll('.section')
+.forEach(sec=>{
+sec.classList.remove('active');
+});
+
+document.getElementById(id)
+.classList.add('active');
+
+}
+
+
+
+const lessons = {
+
+bio1:`
+
+<h1 style="color:#2e8b57;">
+Введение в биологию
+</h1>
+
+<img
+src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=1200"
+style="
+width:100%;
+border-radius:18px;
+margin:20px 0;
+">
+
+<p>
+Биология — это комплексная наука, изучающая жизнь во всех её проявлениях: от невидимых глазу молекул ДНК до глобальных экосистем планеты. Она исследует, как устроены живые организмы, как они растут, размножаются и адаптируются к суровым условиям среды. Современная биология объединяет генетику, экологию и биотехнологии, позволяя человечеству лечить болезни, сохранять природу и заглядывать в тайны эволюции. По сути, это поиск ответа на главный вопрос: что делает живое живым? Изучая биологию, мы познаем самих себя и свою неразрывную связь с биосферой Земли.
+</p>
+
+<ul>
+
+</ul>
+
+`,
+
+bio2:`
+
+<h1 style="color:#2e8b57;">
+Строение клетки
+</h1>
+
+<img
+src="https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=1200"
+style="
+width:100%;
+border-radius:18px;
+margin:20px 0;
+">
+
+<p>
+    Клетка — это элементарная структурная и функциональная единица всех живых организмов. Именно на клеточном уровне материя обретает свойства живого: способность к обмену веществ, росту и самовоспроизведению. Внутри каждой клетки находится сложная система органоидов, действующих как единый механизм под управлением генетического центра — ядра. Клетки могут существовать как самостоятельные организмы (бактерии, простейшие) или формировать ткани и органы многоклеточных существ. Через клеточную мембрану происходит непрерывный контакт с внешней средой и получение энергии. Благодаря делению клеток обеспечивается преемственность поколений и развитие жизни на Земле. Изучением этого микромира занимается цитология — фундаментальный раздел биологии. Понимание строения клетки открывает путь к успехам в медицине, генной инженерии и борьбе со старением
+Клетка — основная единица жизни.
+</p>
+
+<ul>
+<li>Ядро</li>
+<li>Мембрана</li>
+<li>Цитоплазма</li>
+<li>Митохондрии</li>
+</ul>
+
+`,
+
+bio3:`
+
+<h1 style="color:#2e8b57;">
+Генетика
+</h1>
+
+<img
+src="https://images.unsplash.com/photo-1530026405186-ed1f139313f8?q=80&w=1200"
+style="
+width:100%;
+border-radius:18px;
+margin:20px 0;
+">
+
+<p>
+Генетика — это наука о законах наследственности и изменчивости, изучающая способы хранения и передачи биологической информации. В её основе лежит молекула ДНК, в которой зашифрованы уникальные инструкции по строительству и работе каждого живого организма. Участки этой молекулы — гены — определяют всё: от цвета глаз до предрасположенности к определённым талантам или заболеваниям. Генетика объясняет, почему дети похожи на родителей, и как возникают новые признаки в процессе эволюции. Современные технологии позволяют расшифровывать геномы и точечно исправлять ошибки в генетическом коде. Эти знания лежат в основе персонализированной медицины, селекции и борьбы с наследственными недугами. Генетика доказывает единство всего живого на Земле, связывая нас общим кодом истории. Это ключ к управлению биологическим будущим человечества и сохранению редких видов.
+</p>
+
+`,
+
+bio4:`
+
+<h1 style="color:#2e8b57;">
+Экология
+</h1>
+
+<img
+src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=1200"
+style="
+width:100%;
+border-radius:18px;
+margin:20px 0;
+">
+
+<p>
+Вот текст про экологию, оформленный в едином стиле с предыдущими блоками (около 10 строк):
+
+Экология: Наука о нашем общем доме
+Экология — это раздел биологии, изучающий взаимоотношения живых организмов между собой и их взаимодействие с окружающей средой. Она рассматривает природу не как набор отдельных видов, а как сложную сеть связей, где изменение одного звена влияет на всю систему. В центре внимания экологии находятся экосистемы — сообщества, в которых происходит непрерывный круговорот веществ и поток энергии. Наука исследует, как животные и растения адаптируются к климату, почве и влиянию человека. В современном мире экология приобрела решающее значение, помогая решать проблемы загрязнения, сохранения биоразнообразия и изменения климата. Она учит нас рационально использовать природные ресурсы, чтобы поддерживать биологическое равновесие на планете. Понимание экологических законов — это единственный путь к устойчивому будущему и выживанию человечества. Экология доказывает, что человек является частью природы, а не её хозяином.
+</p>
+
+   
+
+`,
+
+practice1:`
+
+<h1 style="color:#2e8b57;">
+Изучение клетки под микроскопом
+</h1>
+
+<p>
+Цель:
+изучить строение клетки.
+</p>
+
+`,
+
+practice2:`
+
+<h1 style="color:#2e8b57;">
+Исследование экосистемы
+</h1>
+
+<p>
+Изучение взаимодействия
+организмов в природе.
+</p>
+
+`
+
+};
+
+function openLesson(name){
+
+document.getElementById('lessonModal')
+.style.display='flex';
+
+document.getElementById('lessonContent')
+.innerHTML = lessons[name];
+
+}
+
+function closeLesson(){
+
+document.getElementById('lessonModal')
+.style.display='none';
+
+}
+
+/* ================= QUIZZES ================= */
+
+const quizzes = {
+
+1:{
+title:"Тест 1 — Основы биологии",
+questions:[
+{
+q:"Что изучает биология?",
+a:["Живые организмы","Компьютеры","Планеты"],
+correct:0
+},
+{
+q:"Главная часть клетки?",
+a:["Ядро","Камень","Песок"],
+correct:0
+},
+{
+q:"Что такое ДНК?",
+a:["Наследственная информация","Кость","Мышца"],
+correct:0
+},
+{
+q:"Какая наука изучает растения?",
+a:["Ботаника","Физика","Математика"],
+correct:0
+},
+{
+q:"Главный орган дыхания?",
+a:["Лёгкие","Печень","Желудок"],
+correct:0
+},
+{
+q:"Что изучает генетика?",
+a:["Наследственность","Космос","Технику"],
+correct:0
+},
+{
+q:"Что вырабатывают растения?",
+a:["Кислород","Нефть","Металл"],
+correct:0
+},
+{
+q:"Сколько камер у сердца?",
+a:["4","2","1"],
+correct:0
+},
+{
+q:"Что такое экология?",
+a:["Наука о природе","Наука о числах","Наука о машинах"],
+correct:0
+},
+{
+q:"Что переносит кислород?",
+a:["Эритроциты","Нервы","Кости"],
+correct:0
+}
+]
+},
+
+2:{
+title:"Тест 2 — Строение клетки",
+questions:[
+{
+q:"Что окружает клетку?",
+a:["Мембрана","Кость","Кожа"],
+correct:0
+},
+{
+q:"Где хранится ДНК?",
+a:["Ядро","Кровь","Кость"],
+correct:0
+},
+{
+q:"Что вырабатывает энергию?",
+a:["Митохондрия","Мозг","Желудок"],
+correct:0
+},
+{
+q:"Что синтезирует белки?",
+a:["Рибосомы","Печень","Сердце"],
+correct:0
+},
+{
+q:"Что содержит клеточный сок?",
+a:["Вакуоль","Лёгкие","Нерв"],
+correct:0
+},
+{
+q:"Что изучает цитология?",
+a:["Клетки","Планеты","Горы"],
+correct:0
+},
+{
+q:"Какой организм одноклеточный?",
+a:["Бактерия","Кошка","Человек"],
+correct:0
+},
+{
+q:"Есть ли ядро у клетки?",
+a:["Да","Нет","Иногда"],
+correct:0
+},
+{
+q:"Что находится внутри клетки?",
+a:["Цитоплазма","Бензин","Песок"],
+correct:0
+},
+{
+q:"Основная единица жизни?",
+a:["Клетка","Орган","Ткань"],
+correct:0
+}
+]
+}
+
+};
+
+/* ================= QUIZ LOGIC ================= */
+
+let currentQuiz = null;
+let currentQuestion = 0;
+let score = 0;
+let selectedAnswers = [];
+
+function startQuiz(id){
+
+currentQuiz = quizzes[id];
+
+currentQuestion = 0;
+score = 0;
+selectedAnswers = [];
+
+document.getElementById('quizModal')
+.style.display='flex';
+
+document.getElementById('quizTitle')
+.textContent=currentQuiz.title;
+
+showQuestion();
+
+}
+
+function showQuestion(){
+
+const q =
+currentQuiz.questions[currentQuestion];
+
+let html = `
+
+<div style="margin-bottom:20px;">
+
+<strong>
+Вопрос ${currentQuestion+1}
+из ${currentQuiz.questions.length}
+</strong>
+
+</div>
+
+<div class="quiz-question">
+${q.q}
+</div>
+
+<div class="quiz-options">
+`;
+
+q.a.forEach((answer,i)=>{
+
+html += `
+
+<div class="quiz-option"
+onclick="selectAnswer(${i})">
+
+${answer}
+
+</div>
+
+`;
+
+});
+
+html += `</div>`;
+
+if(currentQuestion <
+currentQuiz.questions.length-1){
+
+html += `
+
+<button class="btn btn-blue"
+style="margin-top:20px;"
+onclick="nextQuestion()">
+
+Далее →
+
+</button>
+
+`;
+
+}else{
+
+html += `
+
+<button class="btn btn-green"
+style="margin-top:20px;"
+onclick="finishQuiz()">
+
+Завершить тест
+
+</button>
+
+`;
+
+}
+
+document.getElementById('quizContent')
+.innerHTML = html;
+
+}
+
+function selectAnswer(index){
+
+selectedAnswers[currentQuestion]=index;
+
+document.querySelectorAll('.quiz-option')
+.forEach((opt,i)=>{
+
+opt.classList.toggle(
+'selected',
+i===index
+);
+
+});
+
+}
+
+function nextQuestion(){
+
+if(selectedAnswers[currentQuestion]
+=== undefined){
+
+alert("Выберите ответ!");
+
+return;
+
+}
+
+currentQuestion++;
+
+showQuestion();
+
+}
+
+function finishQuiz(){
+
+score = 0;
+
+currentQuiz.questions.forEach((q,i)=>{
+
+if(selectedAnswers[i]===q.correct){
+
+score++;
+
+}
+
+});
+
+const percent =
+Math.round(
+(score/currentQuiz.questions.length)*100
+);
+
+document.getElementById('quizContent')
+.innerHTML = `
+
+<div class="result">
+
+<h2>Тест завершён!</h2>
+
+<p style="font-size:45px;margin:20px 0;">
+
+${score}
+/
+${currentQuiz.questions.length}
+
+</p>
+
+<p style="font-size:30px;">
+
+${percent}%
+
+</p>
+
+</div>
+
+`;
+
+}
+
+function closeQuiz(){
+
+document.getElementById('quizModal')
+.style.display='none';
+
+}
+
+/* ================= OUTSIDE CLICK ================= */
+
+window.onclick = function(e){
+
+if(e.target.id==="lessonModal"){
+closeLesson();
+}
+
+if(e.target.id==="quizModal"){
+closeQuiz();
+}
+
+}
+
+</script>
+
+</body>
+</html>
